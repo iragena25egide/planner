@@ -11,7 +11,6 @@ export default function SplashScreen() {
   const scaleAnim = new Animated.Value(0.9);
 
   useEffect(() => {
-    // Fade and scale animation
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
@@ -27,14 +26,14 @@ export default function SplashScreen() {
 
     const timer = setTimeout(() => {
       navigation.replace('Onboarding');
-    }, 2000);
+    }, 3000);
 
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <LinearGradient
-      colors={['#667eea', '#764ba2']}
+      colors={['#04040495', '#ffffff84']}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
       style={styles.container}
@@ -49,8 +48,8 @@ export default function SplashScreen() {
         ]}
       >
         <Image source={require('../../assets/splash-icon.png')} style={styles.logo} />
-        <Text style={styles.appName}>Planner</Text>
-        <Text style={styles.tagline}>Stay organized, achieve more</Text>
+        <Text style={styles.appName}>Aktivity</Text>
+        <Text style={styles.tagline}>Plan your Activity,Flexible.</Text>
       </Animated.View>
     </LinearGradient>
   );
@@ -69,8 +68,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     marginBottom: 24,
-    borderRadius: 60, // if logo is square, make it round
-    // optional shadow for depth
+    borderRadius: 60, 
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
