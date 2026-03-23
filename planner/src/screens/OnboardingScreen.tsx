@@ -9,7 +9,7 @@ export default function OnboardingScreen() {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../../assets/onboarding.png')} style={styles.image} />
+      <Image source={require('../../assets/splash-icon.png')} style={styles.image} />
       <Text style={styles.title}>Welcome to Planner App</Text>
       <Text style={styles.subtitle}>Organize your tasks and stay productive!</Text>
       <Button title="Get Started" onPress={() => navigation.replace('Home')} />
