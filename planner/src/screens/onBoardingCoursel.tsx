@@ -23,7 +23,7 @@ export default function OnboardingCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
-  // Auto-scroll effect
+  
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (autoScrollEnabled) {
@@ -31,25 +31,20 @@ export default function OnboardingCarousel() {
         if (currentIndex < slides.length - 1) {
           flatListRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
         } else {
-          // On last slide, we could also navigate to Home, but we'll let the button handle it
-        }
+                }
       }, 6000);
     }
     return () => clearTimeout(timer);
   }, [currentIndex, autoScrollEnabled]);
 
-  // Handle manual scroll
+
   const onScroll = (event: any) => {
     const index = Math.round(event.nativeEvent.contentOffset.x / width);
     if (index !== currentIndex) {
       setCurrentIndex(index);
-      // Reset timer on user scroll
+     
       setAutoScrollEnabled(false);
-      // Re-enable after 6 seconds of inactivity? For simplicity, we can keep it disabled
-      // But we'll re-enable when the user stops scrolling for a while? Optional.
-      // For now, we'll just stop auto-scroll after first manual interaction.
-      // To re-enable, you could set a timer after user stops scrolling.
-      // We'll leave it as is to avoid confusion.
+      
     }
   };
 
@@ -79,12 +74,12 @@ export default function OnboardingCarousel() {
     <LinearGradient colors={['#f9f9ff', '#eef2ff']} style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      {/* Skip button */}
+      
       <TouchableOpacity onPress={goToHome} style={styles.skipButton}>
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>
 
-      {/* Carousel */}
+      
       <FlatList
         ref={flatListRef}
         data={slides}
@@ -97,7 +92,7 @@ export default function OnboardingCarousel() {
         scrollEventThrottle={16}
       />
 
-      {/* Indicators */}
+      
       <View style={styles.indicatorsContainer}>
         {slides.map((_, index) => (
           <View
@@ -110,7 +105,7 @@ export default function OnboardingCarousel() {
         ))}
       </View>
 
-      {/* Next / Get Started button */}
+     
       <TouchableOpacity onPress={goToNext} style={styles.button}>
         <LinearGradient
           colors={['#667eea', '#764ba2']}
