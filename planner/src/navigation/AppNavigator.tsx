@@ -3,12 +3,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/OnboardingScreen';
-import AppTabs from './AppTabs'; 
+import AppTabs from './AppTabs';
 
 export type RootStackParamList = {
   Splash: undefined;
   Onboarding: undefined;
-  Home: undefined; // Tab navigator will be a stack screen
+  Home: undefined; 
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
