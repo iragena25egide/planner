@@ -7,6 +7,8 @@ export default function ProfileScreen() {
     <LinearGradient colors={['#f5f7fa', '#e9edf2']} style={styles.container}>
       <Text style={styles.title}>Profile</Text>
       <Text style={styles.subtitle}>Manage your account settings</Text>
+
+        <Text style={styles.subtitle}>Customize your experience and preferences</Text>
     </LinearGradient>
   );
 }
