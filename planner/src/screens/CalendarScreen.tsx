@@ -7,6 +7,9 @@ export default function CalendarScreen() {
     <LinearGradient colors={['#f5f7fa', '#e9edf2']} style={styles.container}>
       <Text style={styles.title}>Calendar View</Text>
       <Text style={styles.subtitle}>Your upcoming tasks will appear here</Text>
+
+
+      <Text style={styles.subtitle}>Stay organized and never miss a deadline</Text>
     </LinearGradient>
   );
 }
