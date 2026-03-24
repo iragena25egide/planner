@@ -47,7 +47,7 @@ export default function SplashScreen() {
           },
         ]}
       >
-        <Image source={require('../../assets/splash-icon.png')} style={styles.logo} />
+        <Image source={require('../../assets/pay2.png')} style={styles.logo} />
         <Text style={styles.appName}>Aktivity</Text>
         <Text style={styles.tagline}>Plan your Activity,Flexible.</Text>
       </Animated.View>
