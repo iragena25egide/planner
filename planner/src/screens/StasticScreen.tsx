@@ -7,6 +7,8 @@ export default function StatisticsScreen() {
     <LinearGradient colors={['#f5f7fa', '#e9edf2']} style={styles.container}>
       <Text style={styles.title}>Task Statistics</Text>
       <Text style={styles.subtitle}>View your productivity insights</Text>
+
+      <Text style={styles.subtitle}>Track your progress and stay motivated</Text>
     </LinearGradient>
   );
 }
