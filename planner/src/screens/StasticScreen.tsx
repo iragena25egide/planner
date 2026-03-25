@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useTasks } from '../context/TaskContext';
+import { useTasks } from '../context/taskContext';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function StatisticsScreen() {
