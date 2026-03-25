@@ -14,7 +14,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { useTasks } from '../context/TaskContext';
+import { useTasks } from '../context/taskContext';
 
 export default function HomeScreen() {
   const { tasks, addTask, toggleTaskCompletion, deleteTask } = useTasks();
