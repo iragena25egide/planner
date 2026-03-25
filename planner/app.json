@@ -3,6 +3,7 @@
     "name": "planner",
     "slug": "planner",
     "version": "1.0.0",
+    "NewArchEnabled": false,
     "orientation": "portrait",
     "icon": "./assets/no.jpeg",
     "userInterfaceStyle": "light",
