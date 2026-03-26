@@ -7,8 +7,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 
 export default function ProfileScreen() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
-  const [username, setUsername] = useState('User');
-  const [email, setEmail] = useState('user@example.com');
+  const [username, setUsername] = useState('Egide Ntabashwa');
+  const [email, setEmail] = useState('iragenaegide205@gmail.com');
 
   useEffect(() => {
     loadProfile();
@@ -44,7 +44,7 @@ export default function ProfileScreen() {
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,
       aspect: [1, 1],
       quality: 0.5,
@@ -67,6 +67,7 @@ export default function ProfileScreen() {
       aspect: [1, 1],
       quality: 0.5,
     });
+
     if (!result.canceled) {
       const uri = result.assets[0].uri;
       setProfileImage(uri);
