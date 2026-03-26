@@ -3,9 +3,8 @@
     "name": "planner",
     "slug": "planner",
     "version": "1.0.0",
-    "NewArchEnabled": false,
     "orientation": "portrait",
-    "icon": "./assets/no.jpeg",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/pay2.png",
@@ -22,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.planner.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c00d6abc-8560-4cc9-9f94-5fa727c3eccb"
+      }
     }
   }
 }
