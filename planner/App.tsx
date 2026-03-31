@@ -1,24 +1,17 @@
-import React, { useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import AppNavigator from './src/navigation/AppNavigator';
-import { TaskProvider } from './src/context/taskContext';
-import { registerForPushNotificationsAsync } from './src/services/notification';
+import React from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { TaskProvider } from './src/context/TaskContext';
+import { ThemeProvider } from './src/context/ThemeContext';
+import AppNavigator from './src/navigation/AppNavigator';
 
 export default function App() {
-  useEffect(() => {
-    registerForPushNotificationsAsync();
-  }, []);
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
+      <ThemeProvider>
         <TaskProvider>
-          <StatusBar style="auto" />
           <AppNavigator />
         </TaskProvider>
-      </SafeAreaProvider>
+      </ThemeProvider>
     </GestureHandlerRootView>
   );
 }
