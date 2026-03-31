@@ -1,109 +1,154 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
-import { Task } from '../types/task';
-import uuid from 'react-native-uuid';
+import { Task, Repeat, Category } from '../types/task';
+import { scheduleTaskNotification, cancelTaskNotification } from '../services/notifications';
 
 interface TaskContextType {
   tasks: Task[];
-  addTask: (title: string, 
-    description: string, 
-    date: Date) => Promise<void>;
-  toggleTaskCompletion: (id: string) => Promise<void>;
+  addTask: (task: Omit<Task, 'id'>) => Promise<void>;
+  updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => Promise<void>;
+  toggleTaskComplete: (id: string) => Promise<void>;
   deleteTask: (id: string) => Promise<void>;
+  getStats: () => { total: number; completed: number; byCategory: Record<Category, number> };
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
 
-export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const STORAGE_KEY = '@tasks';
+
+export const TaskProvider = ({ children }: { children: ReactNode }) => {
   const [tasks, setTasks] = useState<Task[]>([]);
 
-  
   useEffect(() => {
     loadTasks();
+    Notifications.requestPermissionsAsync();
   }, []);
-
- 
-  useEffect(() => {
-    saveTasks();
-  }, [tasks]);
 
   const loadTasks = async () => {
     try {
-      const stored = await AsyncStorage.getItem('tasks');
+      const stored = await AsyncStorage.getItem(STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-       
         const tasksWithDates = parsed.map((t: any) => ({
           ...t,
           date: new Date(t.date),
         }));
         setTasks(tasksWithDates);
+        // reschedule notifications
+        tasksWithDates.forEach((task: Task) => {
+          if (!task.completed && task.date > new Date()) {
+            scheduleTaskNotification(task);
+          }
+        });
       }
     } catch (error) {
       console.error('Failed to load tasks', error);
     }
   };
 
-  const saveTasks = async () => {
+  const saveTasks = async (updatedTasks: Task[]) => {
     try {
-      await AsyncStorage.setItem('tasks', JSON.stringify(tasks));
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedTasks));
     } catch (error) {
       console.error('Failed to save tasks', error);
     }
   };
 
-  const scheduleNotification = async (taskId: string, title: string, date: Date) => {
-   
-    await Notifications.cancelScheduledNotificationAsync(taskId);
-    
-    
-    if (date > new Date()) {
-      const trigger = new Date(date);
-      const notificationId = await Notifications.scheduleNotificationAsync({
-        content: {
-          title: 'Task Reminder',
-          body: title,
-          sound: 'default', 
-          data: { taskId },
-        },
-        trigger,
-        identifier: taskId, 
-      });
-      return notificationId;
-    }
-    return null;
-  };
-
-  const addTask = async (title: string, description: string, date: Date) => {
+  const addTask = async (taskData: Omit<Task, 'id'>) => {
     const newTask: Task = {
-      id: uuid.v4().toString(),
-      title,
-      description,
-      date,
-      completed: false,
+      ...taskData,
+      id: Date.now().toString(),
     };
-    // Schedule notification
-    await scheduleNotification(newTask.id, newTask.title, newTask.date);
-    setTasks(prev => [newTask, ...prev]);
+    const updatedTasks = [newTask, ...tasks];
+    setTasks(updatedTasks);
+    await saveTasks(updatedTasks);
+    if (!newTask.completed && newTask.date > new Date()) {
+      await scheduleTaskNotification(newTask);
+    }
   };
 
-  const toggleTaskCompletion = async (id: string) => {
-    setTasks(prev =>
-      prev.map(task =>
-        task.id === id ? { ...task, completed: !task.completed } : task
-      )
+  const updateTask = async (id: string, updates: Partial<Omit<Task, 'id'>>) => {
+    const taskIndex = tasks.findIndex(t => t.id === id);
+    if (taskIndex === -1) return;
+    const oldTask = tasks[taskIndex];
+    const updatedTask = { ...oldTask, ...updates };
+    const updatedTasks = [...tasks];
+    updatedTasks[taskIndex] = updatedTask;
+    setTasks(updatedTasks);
+    await saveTasks(updatedTasks);
+    // reschedule notification if date changed
+    if (updates.date) {
+      cancelTaskNotification(id);
+      if (!updatedTask.completed && updatedTask.date > new Date()) {
+        scheduleTaskNotification(updatedTask);
+      }
+    }
+  };
+
+  const toggleTaskComplete = async (id: string) => {
+    const task = tasks.find(t => t.id === id);
+    if (!task) return;
+    const completed = !task.completed;
+    const updatedTasks = tasks.map(t =>
+      t.id === id ? { ...t, completed } : t
     );
+    setTasks(updatedTasks);
+    await saveTasks(updatedTasks);
+
+    if (completed && task.repeat && task.repeat !== 'none') {
+      // create a new recurring task
+      const nextDate = new Date(task.date);
+      switch (task.repeat) {
+        case 'daily': nextDate.setDate(nextDate.getDate() + 1); break;
+        case 'weekly': nextDate.setDate(nextDate.getDate() + 7); break;
+        case 'monthly': nextDate.setMonth(nextDate.getMonth() + 1); break;
+      }
+      if (nextDate > new Date()) {
+        const newTask: Task = {
+          ...task,
+          id: Date.now().toString(),
+          date: nextDate,
+          completed: false,
+        };
+        setTasks(prev => [newTask, ...prev]);
+        await saveTasks([newTask, ...updatedTasks]);
+        scheduleTaskNotification(newTask);
+      }
+    } else {
+      if (completed) {
+        cancelTaskNotification(id);
+      } else {
+        scheduleTaskNotification(task);
+      }
+    }
   };
 
   const deleteTask = async (id: string) => {
-   
-    await Notifications.cancelScheduledNotificationAsync(id);
-    setTasks(prev => prev.filter(task => task.id !== id));
+    const task = tasks.find(t => t.id === id);
+    if (task) cancelTaskNotification(id);
+    const updatedTasks = tasks.filter(t => t.id !== id);
+    setTasks(updatedTasks);
+    await saveTasks(updatedTasks);
+  };
+
+  const getStats = () => {
+    const total = tasks.length;
+    const completed = tasks.filter(t => t.completed).length;
+    const byCategory: Record<Category, number> = {
+      Work: 0,
+      Personal: 0,
+      Shopping: 0,
+      Other: 0,
+    };
+    tasks.forEach(task => {
+      if (task.category) byCategory[task.category] += 1;
+    });
+    return { total, completed, byCategory };
   };
 
   return (
-    <TaskContext.Provider value={{ tasks, addTask, toggleTaskCompletion, deleteTask }}>
+    <TaskContext.Provider value={{ tasks, addTask, updateTask, toggleTaskComplete, deleteTask, getStats }}>
       {children}
     </TaskContext.Provider>
   );
@@ -111,8 +156,6 @@ export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useTasks = () => {
   const context = useContext(TaskContext);
-  if (!context) {
-    throw new Error('useTasks must be used within a TaskProvider');
-  }
+  if (!context) throw new Error('useTasks must be used within TaskProvider');
   return context;
 };
