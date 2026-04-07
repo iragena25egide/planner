@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Image,
   StatusBar,
+  Animated,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
@@ -20,45 +21,101 @@ const { width, height } = Dimensions.get('window');
 export default function OnboardingCarousel() {
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const flatListRef = useRef<FlatList>(null);
+  const scrollX = useRef(new Animated.Value(0)).current;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
-  
+  // Auto-scroll effect
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (autoScrollEnabled) {
       timer = setTimeout(() => {
         if (currentIndex < slides.length - 1) {
           flatListRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
-        } else {
-                }
+        }
       }, 6000);
     }
     return () => clearTimeout(timer);
   }, [currentIndex, autoScrollEnabled]);
 
-
-  const onScroll = (event: any) => {
-    const index = Math.round(event.nativeEvent.contentOffset.x / width);
-    if (index !== currentIndex) {
-      setCurrentIndex(index);
-     
-      setAutoScrollEnabled(false);
-      
+  // Update current index on scroll
+  const onScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+    {
+      useNativeDriver: false,
+      listener: (event) => {
+        const index = Math.round(event.nativeEvent.contentOffset.x / width);
+        if (index !== currentIndex) {
+          setCurrentIndex(index);
+          setAutoScrollEnabled(false);
+        }
+      },
     }
-  };
-
-  const renderItem = ({ item }: { item: typeof slides[0] }) => (
-    <View style={styles.slide}>
-      <View style={styles.imageContainer}>
-        <Image source={item.image} style={styles.image} resizeMode="contain" />
-      </View>
-      <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.description}>{item.description}</Text>
-    </View>
   );
 
+  // Parallax image input range for each slide
+  const getImageTranslateX = (index: number) => {
+    const inputRange = [
+      (index - 1) * width,
+      index * width,
+      (index + 1) * width,
+    ];
+    return scrollX.interpolate({
+      inputRange,
+      outputRange: [width * 0.3, 0, -width * 0.3],
+      extrapolate: 'clamp',
+    });
+  };
+
+  // Fade animation for description text
+  const getTextOpacity = (index: number) => {
+    const inputRange = [
+      (index - 1) * width,
+      index * width,
+      (index + 1) * width,
+    ];
+    return scrollX.interpolate({
+      inputRange,
+      outputRange: [0.3, 1, 0.3],
+      extrapolate: 'clamp',
+    });
+  };
+
+  // Scale animation for the button
+  const buttonScale = new Animated.Value(1);
+  const animateButton = () => {
+    Animated.sequence([
+      Animated.spring(buttonScale, { toValue: 1.05, useNativeDriver: true, speed: 50 }),
+      Animated.spring(buttonScale, { toValue: 1, useNativeDriver: true, speed: 50 }),
+    ]).start();
+  };
+
+  const renderItem = ({ item, index }: { item: typeof slides[0]; index: number }) => {
+    const imageTranslateX = getImageTranslateX(index);
+    const textOpacity = getTextOpacity(index);
+
+    return (
+      <View style={styles.slide}>
+        <Animated.View
+          style={[
+            styles.imageContainer,
+            { transform: [{ translateX: imageTranslateX }] },
+          ]}
+        >
+          <Image source={item.image} style={styles.image} resizeMode="contain" />
+        </Animated.View>
+        <Animated.Text style={[styles.title, { opacity: textOpacity }]}>
+          {item.title}
+        </Animated.Text>
+        <Animated.Text style={[styles.description, { opacity: textOpacity }]}>
+          {item.description}
+        </Animated.Text>
+      </View>
+    );
+  };
+
   const goToNext = () => {
+    animateButton();
     if (currentIndex < slides.length - 1) {
       flatListRef.current?.scrollToIndex({ index: currentIndex + 1, animated: true });
     } else {
@@ -70,16 +127,44 @@ export default function OnboardingCarousel() {
     navigation.replace('Home');
   };
 
+  // Animated indicators (spring effect when active)
+  const getIndicatorWidth = (index: number) => {
+    const inputRange = [
+      (index - 1) * width,
+      index * width,
+      (index + 1) * width,
+    ];
+    const outputRange = [8, 24, 8];
+    return scrollX.interpolate({
+      inputRange,
+      outputRange,
+      extrapolate: 'clamp',
+    });
+  };
+
+  const getIndicatorColor = (index: number) => {
+    const inputRange = [
+      (index - 1) * width,
+      index * width,
+      (index + 1) * width,
+    ];
+    return scrollX.interpolate({
+      inputRange,
+      outputRange: ['#cbd5e0', '#667eea', '#cbd5e0'],
+      extrapolate: 'clamp',
+    });
+  };
+
   return (
     <LinearGradient colors={['#f9f9ff', '#eef2ff']} style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      
+      {/* Skip button */}
       <TouchableOpacity onPress={goToHome} style={styles.skipButton}>
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>
 
-      
+      {/* Carousel */}
       <FlatList
         ref={flatListRef}
         data={slides}
@@ -92,32 +177,37 @@ export default function OnboardingCarousel() {
         scrollEventThrottle={16}
       />
 
-      
+      {/* Animated Indicators */}
       <View style={styles.indicatorsContainer}>
         {slides.map((_, index) => (
-          <View
+          <Animated.View
             key={index}
             style={[
               styles.indicator,
-              index === currentIndex && styles.activeIndicator,
+              {
+                width: getIndicatorWidth(index),
+                backgroundColor: getIndicatorColor(index),
+              },
             ]}
           />
         ))}
       </View>
 
-     
-      <TouchableOpacity onPress={goToNext} style={styles.button}>
-        <LinearGradient
-          colors={['#667eea', '#764ba2']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.gradientButton}
-        >
-          <Text style={styles.buttonText}>
-            {currentIndex === slides.length - 1 ? 'Get Started' : 'Next'}
-          </Text>
-        </LinearGradient>
-      </TouchableOpacity>
+      {/* Next / Get Started Button with animation */}
+      <Animated.View style={{ transform: [{ scale: buttonScale }], width: width - 64 }}>
+        <TouchableOpacity onPress={goToNext} style={styles.button}>
+          <LinearGradient
+            colors={['#667eea', '#764ba2']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={styles.gradientButton}
+          >
+            <Text style={styles.buttonText}>
+              {currentIndex === slides.length - 1 ? 'Get Started' : 'Next'}
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      </Animated.View>
     </LinearGradient>
   );
 }
@@ -180,18 +270,12 @@ const styles = StyleSheet.create({
     marginBottom: 32,
   },
   indicator: {
-    width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#cbd5e0',
     marginHorizontal: 6,
   },
-  activeIndicator: {
-    width: 24,
-    backgroundColor: '#667eea',
-  },
   button: {
-    width: width - 64,
+    width: '100%',
     borderRadius: 40,
     overflow: 'hidden',
     marginBottom: 40,
