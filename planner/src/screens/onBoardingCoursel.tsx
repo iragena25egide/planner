@@ -81,7 +81,7 @@ export default function OnboardingCarousel() {
     });
   };
 
-  // Scale animation for the button
+  
   const buttonScale = new Animated.Value(1);
   const animateButton = () => {
     Animated.sequence([
@@ -127,7 +127,7 @@ export default function OnboardingCarousel() {
     navigation.replace('Home');
   };
 
-  // Animated indicators (spring effect when active)
+  
   const getIndicatorWidth = (index: number) => {
     const inputRange = [
       (index - 1) * width,
