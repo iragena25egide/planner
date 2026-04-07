@@ -177,7 +177,7 @@ export default function OnboardingCarousel() {
         scrollEventThrottle={16}
       />
 
-      {/* Animated Indicators */}
+      
       <View style={styles.indicatorsContainer}>
         {slides.map((_, index) => (
           <Animated.View
@@ -193,7 +193,7 @@ export default function OnboardingCarousel() {
         ))}
       </View>
 
-      {/* Next / Get Started Button with animation */}
+      
       <Animated.View style={{ transform: [{ scale: buttonScale }], width: width - 64 }}>
         <TouchableOpacity onPress={goToNext} style={styles.button}>
           <LinearGradient
