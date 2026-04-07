@@ -25,7 +25,7 @@ export default function OnboardingCarousel() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
 
-  // Auto-scroll effect
+  
   useEffect(() => {
     let timer: NodeJS.Timeout;
     if (autoScrollEnabled) {
@@ -38,7 +38,7 @@ export default function OnboardingCarousel() {
     return () => clearTimeout(timer);
   }, [currentIndex, autoScrollEnabled]);
 
-  // Update current index on scroll
+ 
   const onScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { x: scrollX } } }],
     {
