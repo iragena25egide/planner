@@ -53,7 +53,7 @@ export default function OnboardingCarousel() {
     }
   );
 
-  // Parallax image input range for each slide
+  
   const getImageTranslateX = (index: number) => {
     const inputRange = [
       (index - 1) * width,
@@ -67,7 +67,7 @@ export default function OnboardingCarousel() {
     });
   };
 
-  // Fade animation for description text
+ 
   const getTextOpacity = (index: number) => {
     const inputRange = [
       (index - 1) * width,
