@@ -159,12 +159,12 @@ export default function OnboardingCarousel() {
     <LinearGradient colors={['#f9f9ff', '#eef2ff']} style={styles.container}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
 
-      {/* Skip button */}
+      
       <TouchableOpacity onPress={goToHome} style={styles.skipButton}>
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>
 
-      {/* Carousel */}
+      
       <FlatList
         ref={flatListRef}
         data={slides}
