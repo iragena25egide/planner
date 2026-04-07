@@ -7,6 +7,6 @@ export interface Task {
   description?: string;
   date: Date;
   completed: boolean;
-  repeat?: Repeat;          // optional repeat pattern
-  category?: Category;      // optional category
+  repeat?: Repeat;          
+  category?: Category;      
 }
