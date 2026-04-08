@@ -187,7 +187,7 @@ export default function ProfileScreen() {
           </View>
         </View>
 
-        {/* Settings Section */}
+        
         <View style={[styles.card, { backgroundColor: colors.card, marginTop: 16 }]}>
           <Text style={[styles.title, { color: colors.text }]}>Settings</Text>
           <TouchableOpacity style={styles.option} onPress={toggleTheme}>
