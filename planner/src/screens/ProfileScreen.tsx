@@ -206,7 +206,7 @@ export default function ProfileScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* About Section */}
+        
         <View style={[styles.card, { backgroundColor: colors.card, marginTop: 16 }]}>
           <Text style={[styles.title, { color: colors.text }]}>About</Text>
           <Text style={[styles.subtitle, { color: colors.subtext }]}>Planner App v1.0</Text>
