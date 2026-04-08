@@ -214,7 +214,7 @@ export default function ProfileScreen() {
         </View>
       </ScrollView>
 
-      {/* Preview Modal */}
+      
       <Modal visible={showPreview} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={[styles.modalContent, { backgroundColor: colors.card }]}>
