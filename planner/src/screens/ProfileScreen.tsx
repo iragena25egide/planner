@@ -28,7 +28,7 @@ export default function ProfileScreen() {
   const [showPreview, setShowPreview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load saved profile image on mount
+  
   useEffect(() => {
     loadProfileImage();
   }, []);
