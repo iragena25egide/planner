@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useTasks } from '../context/TaskContext';
-import { useTheme } from '../context/ThemeContext';
+import { useTasks } from '../context/taskContext';
+import { useTheme } from '../context/themeContext';
 
 export default function StatisticsScreen() {
   const { tasks, getStats } = useTasks();
