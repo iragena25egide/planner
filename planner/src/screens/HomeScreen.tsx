@@ -16,8 +16,8 @@ import { Picker } from '@react-native-picker/picker';
 import { FAB, Card, IconButton, Checkbox, Chip } from 'react-native-paper';
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useTasks } from '../context/taskContext';
-import { useTheme } from '../context/themeContext';
+import { useTasks } from '../context/TaskContext';
+import { useTheme } from '../context/ThemeContext';
 import { Task, Category, Repeat } from '../types/task';
 
 const categories: Category[] = ['Work', 'Personal', 'Shopping', 'Other'];

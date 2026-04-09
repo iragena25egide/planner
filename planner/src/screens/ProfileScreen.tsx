@@ -16,8 +16,8 @@ import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useTasks } from '../context/taskContext';
-import { useTheme } from '../context/themeContext';
+import { useTasks } from '../context/TaskContext';
+import { useTheme } from '../context/ThemeContext';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function ProfileScreen() {
@@ -167,8 +167,8 @@ export default function ProfileScreen() {
               <MaterialIcons name="camera-alt" size={20} color="#fff" />
             </View>
           </TouchableOpacity>
-          <Text style={[styles.userName, { color: colors.text }]}>User</Text>
-          <Text style={[styles.userEmail, { color: colors.subtext }]}>user@example.com</Text>
+          <Text style={[styles.userName, { color: colors.text }]}>iragena egide</Text>
+          <Text style={[styles.userEmail, { color: colors.subtext }]}>iragenaegide205.com</Text>
           <View style={styles.imageActions}>
             <TouchableOpacity style={styles.imageActionBtn} onPress={() => pickImage(false)}>
               <MaterialIcons name="photo-library" size={20} color={colors.accent} />

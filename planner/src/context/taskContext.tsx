@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect, useContext, ReactNode } from
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { Task, Repeat, Category } from '../types/task';
-import { scheduleTaskNotification, cancelTaskNotification } from '../services/notifications';
+import { scheduleTaskNotification, cancelTaskNotification } from '../services/notification';
 
 interface TaskContextType {
   tasks: Task[];

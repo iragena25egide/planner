@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Calendar } from 'react-native-calendars';
-import { useTasks } from '../context/taskContext';
+import { useTasks } from '../context/TaskContext';
 import { Task } from '../types/task';
 
 export default function CalendarScreen() {
