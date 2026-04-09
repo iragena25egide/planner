@@ -16,8 +16,8 @@ import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useTasks } from '../context/TaskContext';
-import { useTheme } from '../context/ThemeContext';
+import { useTasks } from '../context/taskContext';
+import { useTheme } from '../context/themeContext';
 import { MaterialIcons } from '@expo/vector-icons';
 
 export default function ProfileScreen() {
