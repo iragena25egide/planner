@@ -4,6 +4,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import HomeScreen from '../screens/HomeScreen';
 import CalendarScreen from '../screens/CalendarScreen';
 import StatisticsScreen from '../screens/StasticScreen';
+import FinanceScreen from '../screens/FinanceScreen';
+import NotesScreen from '../screens/NotesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
 const Tab = createBottomTabNavigator();
@@ -16,13 +18,17 @@ export default function AppTabs() {
           let iconName: keyof typeof MaterialIcons.glyphMap = 'help';
 
           if (route.name === 'Tasks') {
-            iconName = focused ? 'assignment' : 'assignment';
+            iconName = 'assignment';
           } else if (route.name === 'Calendar') {
-            iconName = focused ? 'calendar-today' : 'calendar-today';
+            iconName = 'calendar-today';
+          } else if (route.name === 'Finance') {
+            iconName = 'account-balance-wallet';
+          } else if (route.name === 'Notes') {
+            iconName = 'note';
           } else if (route.name === 'Stats') {
-            iconName = focused ? 'bar-chart' : 'bar-chart';
+            iconName = 'bar-chart';
           } else if (route.name === 'Profile') {
-            iconName = focused ? 'person' : 'person-outline';
+            iconName = 'person-outline';
           }
 
           return <MaterialIcons name={iconName} size={size} color={color} />;
@@ -48,6 +54,8 @@ export default function AppTabs() {
     >
       <Tab.Screen name="Tasks" component={HomeScreen} />
       <Tab.Screen name="Calendar" component={CalendarScreen} />
+      <Tab.Screen name="Finance" component={FinanceScreen} />
+      <Tab.Screen name="Notes" component={NotesScreen} />
       <Tab.Screen name="Stats" component={StatisticsScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>
