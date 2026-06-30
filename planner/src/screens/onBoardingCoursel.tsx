@@ -44,7 +44,7 @@ export default function OnboardingCarousel() {
     {
       useNativeDriver: false,
       listener: (event) => {
-        const index = Math.round(event.nativeEvent.contentOffset.x / width);
+        const index = Math.round((event as any).nativeEvent.contentOffset.x / width);
         if (index !== currentIndex) {
           setCurrentIndex(index);
           setAutoScrollEnabled(false);
