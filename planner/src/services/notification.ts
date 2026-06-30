@@ -7,6 +7,8 @@ Notifications.setNotificationHandler({
     shouldShowAlert: true,
     shouldPlaySound: true,
     shouldSetBadge: false,
+    shouldShowBanner: true,
+    shouldShowList: true
   }),
 });
 
@@ -31,7 +33,7 @@ export const scheduleTaskNotification = async (task: Task) => {
       body: task.title + (task.description ? `: ${task.description}` : ''),
       sound: 'default',
     },
-    trigger,
+    trigger: trigger as any,
   });
 };
 
