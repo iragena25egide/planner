@@ -117,14 +117,14 @@ export default function ProfileScreen() {
     try {
       setIsLoading(true);
       const json = JSON.stringify(tasks, null, 2);
-      const fileUri = FileSystem.documentDirectory + 'tasks_backup.json';
+      const fileUri = ((FileSystem as any).documentDirectory || (FileSystem as any).cacheDirectory) + 'tasks_backup.json';
       await FileSystem.writeAsStringAsync(fileUri, json);
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(fileUri);
       } else {
         Alert.alert('Sharing not available');
       }
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Export failed', err.message);
     } finally {
       setIsLoading(false);
@@ -135,15 +135,15 @@ export default function ProfileScreen() {
     try {
       setIsLoading(true);
       const result = await DocumentPicker.getDocumentAsync({ type: 'application/json' });
-      if (result.type === 'success') {
-        const content = await FileSystem.readAsStringAsync(result.uri);
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const content = await FileSystem.readAsStringAsync(result.assets[0].uri);
         const imported = JSON.parse(content);
         for (const task of imported) {
           await addTask({ ...task, id: undefined });
         }
         Alert.alert('Import successful');
       }
-    } catch (err) {
+    } catch (err: any) {
       Alert.alert('Import failed', err.message);
     } finally {
       setIsLoading(false);
