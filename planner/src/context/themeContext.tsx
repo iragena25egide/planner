@@ -7,7 +7,7 @@ interface ThemeContextType {
   theme: Theme;
   toggleTheme: () => void;
   colors: {
-    background: string[];
+    background: readonly [string, string, ...string[]];
     text: string;
     subtext: string;
     card: string;
@@ -37,7 +37,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const colors = {
-    background: theme === 'light' ? ['#f5f7fa', '#e9edf2'] : ['#1a202c', '#2d3748'],
+    background: theme === 'light' ? ['#f5f7fa', '#e9edf2'] as const : ['#1a202c', '#2d3748'] as const,
     text: theme === 'light' ? '#2d3748' : '#f7fafc',
     subtext: theme === 'light' ? '#718096' : '#a0aec0',
     card: theme === 'light' ? '#ffffff' : '#2d3748',
